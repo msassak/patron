@@ -191,14 +191,6 @@ describe Patron::Session do
     body.header['transfer-encoding'].first.should == "chunked"
   end
 
-  it "should pass credentials as http basic auth" do
-    @session.username = "foo"
-    @session.password = "bar"
-    response = @session.get("/test")
-    body = YAML::load(response.body)
-    body.header['authorization'].should == [encode_authz("foo", "bar")]
-  end
-
   it "should handle cookies if set" do
     @session.handle_cookies
     response = @session.get("/setcookie").body
@@ -258,8 +250,22 @@ describe Patron::Session do
     (request.path + '?' + request.query_string).should == "/test?foo=bar&baz=quux"
   end
 
-  def encode_authz(user, passwd)
-    "Basic " + Base64.encode64("#{user}:#{passwd}").strip
-  end
+  describe "authorization" do
+    def encode_authz(user, passwd)
+      "Basic " + Base64.encode64("#{user}:#{passwd}").strip
+    end
 
+    it "should use any auth type by default" do
+      @session.auth_type.should == :any
+    end
+
+    it "should pass credentials as http basic auth" do
+      @session.auth_type = :basic
+      @session.username = "foo"
+      @session.password = "bar"
+      response = @session.get("/test")
+      body = YAML::load(response.body)
+      body.header['authorization'].should == [encode_authz("foo", "bar")]
+    end
+  end
 end

@@ -81,7 +81,7 @@ module Patron
       @timeout = 5
       @connect_timeout = 1
       @max_redirects = 5
-      @auth_type = :basic
+      @auth_type = :any
     end
 
     # Turn on cookie handling for this session, storing them in memory by

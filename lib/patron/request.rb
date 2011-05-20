@@ -42,9 +42,8 @@ module Patron
       @max_redirects = -1
     end
 
-    attr_accessor :url, :username, :password, :file_name, :proxy, :proxy_type, :auth_type, :insecure, :multipart
-    attr_reader :action, :timeout, :connect_timeout, :max_redirects, :headers, :buffer_size
-    attr_reader :auth_type
+    attr_accessor :url, :username, :password, :file_name, :proxy, :proxy_type, :insecure, :multipart
+    attr_reader :action, :timeout, :connect_timeout, :max_redirects, :headers, :buffer_size, :auth_type
 
     # Set the type of authentication to use for this request.
     #
@@ -55,7 +54,7 @@ module Patron
     #   sess.username = "foo"
     #   sess.password = "sekrit"
     #   sess.auth_type = :digest
-    def auth_type=(type=:basic)
+    def auth_type=(type=:any)
       @auth_type = case type
       when :basic, "basic"
         Request::AuthBasic
